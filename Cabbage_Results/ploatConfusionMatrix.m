@@ -3,12 +3,12 @@
 networkName = input('Type Network name : ', 's');
 net = trainedNetwork_1;
 
-imageFolder = fullfile('/mnt/nfs_clientshare/','Final-Dataset');
+imageFolder = fullfile('~/mnt/nfs_clientshare/','Final-Dataset');
 imds = imageDatastore(imageFolder, 'LabelSource', 'foldernames', 'IncludeSubfolders', true);
 
 imageSize = net.Layers(1).InputSize;
 augmentedTestSet = augmentedImageDatastore(imageSize, imds, 'ColorPreprocessing', 'gray2rgb');
-set(groot,'DefaultFigureRenderer','painters')
+
 featureLayer = 'classoutput';
 
 labels = imds.Labels;
@@ -124,15 +124,9 @@ end
 precision = tp/(tp + fp);
 recall = tp/(tp + fn);
 
-
-fprintf("Training accuracy : %f\n", mean(trainInfoStruct_1.TrainingAccuracy'));
-fprintf("Training loss : %f\n", mean(trainInfoStruct_1.TrainingLoss'));
-fprintf("Validation accuracy : %f\n", trainInfoStruct_1.FinalValidationAccuracy);
-fprintf("Validation loss : %f\n", trainInfoStruct_1.FinalValidationLoss);
-fprintf("Top 1 accuracy : %f\n", top1Accuracy*100);
+fprintf("Top 1 accuracy : %f\n", top1Accuracy);
 fprintf('Precision : %f\n', precision);
-fprintf('Recall : %f\n', recall);
-fprintf('F1 Score : %f\n\n', 2 * (precision * recall)/(precision + recall));
+fprintf('Recall : %f\n\n', recall);
 
 
 
@@ -141,7 +135,6 @@ plotconfusion(labels, plc, networkName);
 grid
 
 X_AUC1 = [0; 0; 1;];
-
 Y_AUC1 = [0; 1; 1;];
 
 X_AUC_05 = [0; 0.5; 1;];
@@ -167,7 +160,7 @@ l_healthy = strcat('Healthy          AUC=', string(AUC_healthy));
 
 legend('AUC = 1', l_Backmoth, l_Clubroot, l_Leafminer, l_Mildew, l_healthy, 'AUC = 0.5', 'Location', 'Best')
 xlabel('False positive rate'); ylabel('True positive rate');
-title('ROC Curves')
+title('ROC Curves for Chinese-Cabbage')
 hold off
 
 grid
